@@ -51,8 +51,11 @@ async def create_session(base_prompt: str = "You are a friendly chatbot", secret
     session_id = uuid.uuid4().hex
 
     await redis.set(f"{session_id}:base_prompt", base_prompt)
+    await redis.expire(f"{session_id}:base_prompt", 60*60)
     await redis.lpush(f"{session_id}:user", 'Start')
+    await redis.expire(f"{session_id}:user", 60*60)
     await redis.lpush(f"{session_id}:bot", 'Start')
+    await redis.expire(f"{session_id}:bot", 60*60)
 
     return {"session_id": session_id}
 
