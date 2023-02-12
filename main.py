@@ -4,6 +4,7 @@ import uuid
 from openai_chatbot import get_message_response
 import os
 from dotenv import load_dotenv
+import uvicorn
 
 load_dotenv()
 
@@ -113,3 +114,6 @@ async def get_conversation(session_id: str, secret_key: str = "secret"):
     bot_messages = await redis.lrange(f"{session_id}:bot", 1, -1)
 
     return {"user_messages": user_messages, "bot_messages": bot_messages}
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=os.getenv("PORT", default=5000), log_level="info")
